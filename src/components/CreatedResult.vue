@@ -1,6 +1,24 @@
 <template>
-  <div class="result">hi</div>
+  <div>
+    <img v-if="parsedResult.imageUrl" :src="parsedResult.imageUrl" alt="Generated Image" />
+  </div>
 </template>
+
+<script>
+export default {
+  props: {
+    result: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  computed: {
+    parsedResult() {
+      return this.result
+    }
+  }
+}
+</script>
 
 <style>
 .result {
@@ -10,7 +28,5 @@
   border-radius: 15px;
   aspect-ratio: 1 /1;
   width: 200px;
-
-  background: gray;
 }
 </style>

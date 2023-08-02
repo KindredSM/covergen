@@ -14,6 +14,7 @@
   </div>
   <div class="created">
     <created-result class="created-item" :result="generatedResult" />
+
     <p>{{ generatedResult }}</p>
   </div>
 </template>
@@ -30,12 +31,11 @@ export default {
     return {
       prompt: '',
       defaultPrompt: 'Man walking on water',
-      generatedResult: ''
+      generatedResult: {}
     }
   },
   methods: {
     generateCover() {
-      const prodia = new Prodia(`433f6624-ec6c-41a8-841d-805381a319b7`)
       const options = {
         method: 'POST',
         url: 'https://api.prodia.com/v1/job',
@@ -127,7 +127,6 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  column-gap: 20px;
 }
 
 .created-item {
