@@ -5,7 +5,6 @@ import Navbar from './components/Navbar.vue'
 
 <template>
   <navbar />
-
   <RouterView />
 </template>
 
@@ -18,16 +17,6 @@ header {
 .logo {
   display: block;
   margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 18px;
-
-  margin-top: 1rem;
-}
-
-nav a.router-link-exact-active {
 }
 
 nav a.router-link-exact-active:hover {

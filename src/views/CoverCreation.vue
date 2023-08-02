@@ -168,6 +168,7 @@ h1 {
 
 .create-button:hover {
   background: white;
+
   color: black;
 }
 

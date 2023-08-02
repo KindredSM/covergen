@@ -14,13 +14,17 @@
 
 <style>
 .navbar {
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   top: 0;
+  height: 80px;
   width: 100%;
+  z-index: 99;
+
+  background: var(--color-background);
 }
 
 .logo {
