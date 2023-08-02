@@ -25,7 +25,7 @@
       :key="result.id"
       class="created-item"
       :result="result"
-      :loading="loading"
+      :loading="result.loading"
     />
   </div>
 </template>
@@ -51,9 +51,15 @@ export default {
   },
   methods: {
     async generateCover() {
-      this.loading = true
+      const newJob = {
+        loading: true,
+        status: 'pending'
+      }
+
+      this.generatedResults.push(newJob)
+
       try {
-        let job = await createJob({
+        const response = await createJob({
           model: 'sdv1_4.ckpt [7460a6fa]',
           prompt: this.prompt,
           negative_prompt: this.negativePrompt,
@@ -64,6 +70,8 @@ export default {
 
         console.log('Job Created! Waiting...')
 
+        let job = response
+
         while (job.status !== 'succeeded' && job.status !== 'failed') {
           await new Promise((resolve) => setTimeout(resolve, 250))
           job = await getJob(job.job)
@@ -73,16 +81,19 @@ export default {
           throw new Error('Job failed!')
         }
 
+        Object.assign(newJob, job)
+        newJob.loading = false
+
         console.log('Generation completed!', job.imageUrl)
-        this.generatedResult = job
-        this.generatedResults.push(job)
+
         this.updateLocalStorage()
       } catch (error) {
         console.error('Error generating cover:', error)
-      } finally {
-        this.loading = false
+        newJob.status = 'failed'
+        newJob.loading = false
       }
     },
+
     updateLocalStorage() {
       localStorage.setItem('generatedResults', JSON.stringify(this.generatedResults))
     },
