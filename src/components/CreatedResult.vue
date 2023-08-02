@@ -63,7 +63,7 @@ export default {
   aspect-ratio: 1 /1;
   width: 300px;
   height: 300px;
-  background-color: #282828;
+  background: linear-gradient(90deg, rgba(228, 120, 255, 1) 0%, rgba(255, 7, 37, 1) 100%);
   font-weight: bold;
 }
 
