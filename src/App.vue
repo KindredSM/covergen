@@ -22,13 +22,12 @@ header {
 
 nav {
   width: 100%;
-  font-size: 16px;
+  font-size: 18px;
 
   margin-top: 1rem;
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
 }
 
 nav a.router-link-exact-active:hover {

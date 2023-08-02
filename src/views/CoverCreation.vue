@@ -20,7 +20,13 @@
     </div>
   </div>
   <div class="created">
-    <created-result class="created-item" :result="generatedResult" :loading="loading" />
+    <created-result
+      v-for="result in generatedResults"
+      :key="result.id"
+      class="created-item"
+      :result="result"
+      :loading="loading"
+    />
   </div>
 </template>
 
@@ -39,6 +45,7 @@ export default {
       defaultPrompt: 'Man walking on water',
       defaultNegative: 'Badly drawn',
       generatedResult: {},
+      generatedResults: [],
       loading: false
     }
   },
@@ -68,19 +75,33 @@ export default {
 
         console.log('Generation completed!', job.imageUrl)
         this.generatedResult = job
+        this.generatedResults.push(job)
+        this.updateLocalStorage()
       } catch (error) {
         console.error('Error generating cover:', error)
       } finally {
         this.loading = false
       }
+    },
+    updateLocalStorage() {
+      localStorage.setItem('generatedResults', JSON.stringify(this.generatedResults))
+    },
+    loadFromLocalStorage() {
+      const storedResults = localStorage.getItem('generatedResults')
+      if (storedResults) {
+        this.generatedResults = JSON.parse(storedResults)
+      }
     }
+  },
+  created() {
+    this.loadFromLocalStorage()
   }
 }
 </script>
 
 <style>
 * {
-  font-size: 16px;
+  font-size: 18px;
 }
 .create-container {
   margin-top: 100px;
@@ -143,9 +164,17 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+
+  margin: 0 auto;
+  gap: 20px;
 }
 
 .created-item {
   margin-top: 20px;
+}
+
+.created-item:hover {
+  cursor: pointer;
 }
 </style>
