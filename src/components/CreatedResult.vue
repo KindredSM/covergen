@@ -1,6 +1,12 @@
 <template>
   <div>
-    <img v-if="parsedResult.imageUrl" :src="parsedResult.imageUrl" alt="Generated Image" />
+    <div v-if="isLoading" class="loading-state">Loading...</div>
+    <img
+      v-else-if="parsedResult.imageUrl"
+      :src="parsedResult.imageUrl"
+      alt="Generated Image"
+      class="result"
+    />
   </div>
 </template>
 
@@ -10,6 +16,10 @@ export default {
     result: {
       type: Object,
       default: () => ({})
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -27,6 +37,18 @@ export default {
   align-items: center;
   border-radius: 15px;
   aspect-ratio: 1 /1;
-  width: 200px;
+  width: 300px;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  aspect-ratio: 1 /1;
+  width: 300px;
+  height: 300px;
+  background-color: #f0f0f0;
+  font-weight: bold;
 }
 </style>

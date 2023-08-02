@@ -9,19 +9,24 @@
         v-model="prompt"
         v-bind:placeholder="defaultPrompt"
       />
+      <input
+        type="text"
+        id="negative-prompt"
+        class="input negative"
+        v-model="negativePrompt"
+        v-bind:placeholder="defaultNegative"
+      />
       <button class="create-button" @click="generateCover">create</button>
     </div>
   </div>
   <div class="created">
-    <created-result class="created-item" :result="generatedResult" />
-
-    <p>{{ generatedResult }}</p>
+    <created-result class="created-item" :result="generatedResult" :loading="loading" />
   </div>
 </template>
 
 <script>
 import CreatedResult from '../components/CreatedResult.vue'
-import axios from 'axios'
+import { createJob, getJob } from '../scripts/prodia'
 
 export default {
   components: {
@@ -30,43 +35,44 @@ export default {
   data() {
     return {
       prompt: '',
+      negativePrompt: '',
       defaultPrompt: 'Man walking on water',
-      generatedResult: {}
+      defaultNegative: 'Badly drawn',
+      generatedResult: {},
+      loading: false
     }
   },
   methods: {
-    generateCover() {
-      const options = {
-        method: 'POST',
-        url: 'https://api.prodia.com/v1/job',
-        headers: {
-          accept: 'application/json',
-          'content-type': 'application/json',
-          'X-Prodia-Key': '433f6624-ec6c-41a8-841d-805381a319b7'
-        },
-        data: {
-          model: 'elldreths-vivid-mix.safetensors [342d9d26]',
+    async generateCover() {
+      this.loading = true
+      try {
+        let job = await createJob({
+          model: 'sdv1_4.ckpt [7460a6fa]',
           prompt: this.prompt,
-          negative_prompt: 'badly drawn',
-          steps: 25,
-          cfg_scale: 7,
-          seed: -1,
-          upscale: false,
-          sampler: 'Euler',
-          aspect_ratio: 'square'
-        }
-      }
+          negative_prompt: this.negativePrompt,
+          seed: 100,
+          steps: 30,
+          cfg_scale: 7
+        })
 
-      axios
-        .request(options)
-        .then((response) => {
-          this.generatedResult = response.data
-          console.log(this.prompt)
-        })
-        .catch((error) => {
-          console.log('failed')
-          console.error(error)
-        })
+        console.log('Job Created! Waiting...')
+
+        while (job.status !== 'succeeded' && job.status !== 'failed') {
+          await new Promise((resolve) => setTimeout(resolve, 250))
+          job = await getJob(job.job)
+        }
+
+        if (job.status !== 'succeeded') {
+          throw new Error('Job failed!')
+        }
+
+        console.log('Generation completed!', job.imageUrl)
+        this.generatedResult = job
+      } catch (error) {
+        console.error('Error generating cover:', error)
+      } finally {
+        this.loading = false
+      }
     }
   }
 }
@@ -84,6 +90,10 @@ export default {
   flex-direction: column;
 }
 
+img {
+  border-radius: 20px;
+}
+
 .create {
   display: flex;
   flex-direction: column;
@@ -93,6 +103,7 @@ export default {
 
 h1 {
   color: white;
+  font-size: 24px;
   margin-bottom: 10px;
 }
 .input {
@@ -103,6 +114,11 @@ h1 {
   width: 100%;
   height: 50px;
   background: white;
+}
+
+.negative {
+  background: none;
+  color: white;
 }
 
 .create-button {
