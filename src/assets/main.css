@@ -27,7 +27,6 @@ li {
 }
 
 @media (hover: hover) {
-  a:hover,
   li:hover {
     color: rgb(222, 222, 222);
     border-bottom: 2px solid white;

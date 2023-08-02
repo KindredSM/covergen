@@ -1,6 +1,7 @@
 <template>
   <nav class="navbar">
     <img alt="logo" class="logo" src="@/assets/CoverGenLogo.svg" />
+    <p>powered by <a href="https://prodia.com/" target="_blank">Prodia</a></p>
     <ul class="nav-links">
       <li>
         <router-link to="/"> <p>Art</p></router-link>
@@ -30,6 +31,7 @@
 .logo {
   margin-left: 25px;
   width: 150px;
+  cursor: pointer;
 }
 
 .nav-links {

@@ -26,6 +26,7 @@
       class="created-item"
       :result="result"
       :loading="result.loading"
+      @delete="removeResult"
     />
   </div>
 </template>
@@ -102,6 +103,10 @@ export default {
       if (storedResults) {
         this.generatedResults = JSON.parse(storedResults)
       }
+    },
+    removeResult(deletedResult) {
+      this.generatedResults = this.generatedResults.filter((result) => result !== deletedResult)
+      this.updateLocalStorage()
     }
   },
   created() {

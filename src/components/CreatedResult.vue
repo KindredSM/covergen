@@ -7,6 +7,7 @@
       alt="Generated Image"
       class="result"
     />
+    <button class="delete-btn" @click="deleteResult">Delete</button>
     <a
       v-if="parsedResult.imageUrl"
       :href="parsedResult.imageUrl"
@@ -34,6 +35,11 @@ export default {
   computed: {
     parsedResult() {
       return this.result
+    }
+  },
+  methods: {
+    deleteResult() {
+      this.$emit('delete', this.result)
     }
   }
 }
@@ -86,9 +92,34 @@ export default {
   text-decoration: none;
   font-weight: bold;
   display: none;
+  transition: ease all 0.2s;
 }
 
+.delete-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: #282828;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  display: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: ease all 0.2s;
+}
+
+.delete-btn:hover,
+.download-btn:hover {
+  background-color: #313131;
+}
 .result-container:hover .download-btn {
+  display: block;
+}
+.result-container:hover .delete-btn {
   display: block;
 }
 

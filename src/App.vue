@@ -19,10 +19,6 @@ header {
   margin: 0 auto 2rem;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
 nav a {
   display: inline-block;
   padding: 0 1rem;
