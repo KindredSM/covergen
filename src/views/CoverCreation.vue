@@ -21,7 +21,6 @@
 <script>
 import CreatedResult from '../components/CreatedResult.vue'
 import axios from 'axios'
-import Prodia from 'prodia-api'
 
 export default {
   components: {
