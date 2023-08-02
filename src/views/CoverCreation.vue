@@ -9,6 +9,7 @@
         v-model="prompt"
         v-bind:placeholder="defaultPrompt"
       />
+
       <input
         type="text"
         id="negative-prompt"
@@ -44,7 +45,7 @@ export default {
       prompt: '',
       negativePrompt: '',
       defaultPrompt: 'Man walking on water',
-      defaultNegative: 'Badly drawn',
+      defaultNegative: 'add words to exclude',
       generatedResult: {},
       generatedResults: [],
       loading: false
@@ -127,6 +128,10 @@ export default {
   flex-direction: column;
 }
 
+h2 {
+  color: white;
+}
+
 img {
   border-radius: 20px;
 }
@@ -185,10 +190,7 @@ h1 {
 
   margin: 0 auto;
   gap: 20px;
-}
-
-.created-item {
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 .created-item:hover {
