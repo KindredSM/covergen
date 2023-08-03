@@ -7,11 +7,11 @@
       alt="Generated Image"
       class="result"
     />
-    <button class="delete-btn" @click="deleteResult">Delete</button>
+    <button class="delete-button" @click="deleteResult">Delete</button>
     <a
       v-if="parsedResult.imageUrl"
       :href="parsedResult.imageUrl"
-      class="download-btn"
+      class="download-button"
       target="_blank"
       download
     >
@@ -81,7 +81,7 @@ export default {
   display: inline-block;
 }
 
-.download-btn {
+.download-button {
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -95,7 +95,7 @@ export default {
   transition: ease all 0.2s;
 }
 
-.delete-btn {
+.delete-button {
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -112,14 +112,14 @@ export default {
   transition: ease all 0.2s;
 }
 
-.delete-btn:hover,
-.download-btn:hover {
+.delete-button:hover,
+.download-button:hover {
   background-color: #313131;
 }
-.result-container:hover .download-btn {
+.result-container:hover .download-button {
   display: block;
 }
-.result-container:hover .delete-btn {
+.result-container:hover .delete-button {
   display: block;
 }
 

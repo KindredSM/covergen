@@ -2,13 +2,16 @@
   <div class="create-container">
     <h1>Create your next cover art</h1>
     <div class="create">
-      <input
-        type="text"
-        id="prompt"
-        class="input"
-        v-model="prompt"
-        v-bind:placeholder="defaultPrompt"
-      />
+      <div class="prompt-input">
+        <input
+          type="text"
+          id="prompt"
+          class="input"
+          v-model="prompt"
+          v-bind:placeholder="defaultPrompt"
+        />
+        <button class="settings-button"><settings-icon /></button>
+      </div>
 
       <input
         type="text"
@@ -17,6 +20,7 @@
         v-model="negativePrompt"
         v-bind:placeholder="defaultNegative"
       />
+
       <button class="create-button" @click="generateCover">create</button>
     </div>
   </div>
@@ -35,10 +39,12 @@
 <script>
 import CreatedResult from '../components/CreatedResult.vue'
 import { createJob, getJob } from '../scripts/prodia'
+import SettingsIcon from '../components/icons/SettingsIcon.vue'
 
 export default {
   components: {
-    CreatedResult
+    CreatedResult,
+    SettingsIcon
   },
   data() {
     return {
@@ -182,6 +188,10 @@ h1 {
   color: black;
 }
 
+.prompt-input {
+  position: relative;
+}
+
 .created {
   display: flex;
   justify-content: center;
@@ -193,6 +203,24 @@ h1 {
   margin-top: 50px;
 }
 
+.settings-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--colour-main);
+  border-radius: 20px;
+  width: 60px;
+  height: 35px;
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  cursor: pointer;
+  transition: ease 0.2s;
+}
+
+.settings-button:hover {
+  opacity: 0.8;
+}
 .created-item:hover {
   cursor: pointer;
 }

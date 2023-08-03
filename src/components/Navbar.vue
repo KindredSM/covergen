@@ -7,11 +7,17 @@
       </p>
     </div>
     <ul class="nav-links">
-      <li>
-        <router-link to="/" active-class="router-link-active"> <p>Art</p></router-link>
+      <li class="link">
+        <router-link to="/" active-class="router-link-active" class="link">
+          <art-icon />
+          <p>Art</p>
+        </router-link>
       </li>
       <li>
-        <router-link to="/Lyrics"> <p>Lyrics</p></router-link>
+        <router-link to="/Lyrics" class="link">
+          <lyrics-icon />
+          <p>Lyrics</p>
+        </router-link>
       </li>
       <li>
         <a href="https://github.com/KindredSM/covergen" target="_blank"> <p>GitHub</p></a>
@@ -20,12 +26,31 @@
   </nav>
 </template>
 
+<script>
+import LoginIcon from './icons/LoginIcon.vue'
+import LyricsIcon from './icons/LyricsIcon.vue'
+import ArtIcon from './icons/ArtIcon.vue'
+
+export default {
+  components: {
+    LoginIcon,
+    LyricsIcon,
+    ArtIcon
+  }
+}
+</script>
+
 <style>
 .router-link-active {
-  color: rgb(186, 186, 186);
   border-bottom: 2px solid white;
 }
 
+.link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
 .navbar {
   position: fixed;
   display: flex;
