@@ -1,27 +1,50 @@
 <template>
   <div class="result-container">
     <div v-if="loading" class="loading-state"><div class="spinner"></div></div>
+
     <img
       v-else-if="parsedResult.imageUrl"
       :src="parsedResult.imageUrl"
       alt="Generated Image"
       class="result"
     />
-    <button class="delete-button" @click="deleteResult">Delete</button>
-    <a
-      v-if="parsedResult.imageUrl"
-      :href="parsedResult.imageUrl"
-      class="download-button"
-      target="_blank"
-      download
-    >
-      Download
-    </a>
+    <div class="button-container">
+      <button class="btn delete-button" @click="deleteResult"><delete-icon /></button>
+      <button class="btn favourite-button" @click="toggleFavourite">
+        <favourite-icon class="favourite-icon" v-if="!favourite" /><favouriteSelectedIcon v-else />
+      </button>
+      <a
+        v-if="parsedResult.imageUrl"
+        :href="parsedResult.imageUrl"
+        class="btn download-button"
+        target="_blank"
+        download
+      >
+        <download-icon />
+      </a>
+    </div>
   </div>
 </template>
 
 <script>
+import DownloadIcon from './icons/DownloadIcon.vue'
+import DeleteIcon from './icons/DeleteIcon.vue'
+import FavouriteIcon from './icons/FavouriteIcon.vue'
+import favouriteSelectedIcon from './icons/FavouriteSelectedIcon.vue'
+
 export default {
+  data() {
+    return {
+      favourite: false
+    }
+  },
+
+  components: {
+    DownloadIcon,
+    DeleteIcon,
+    FavouriteIcon,
+    favouriteSelectedIcon
+  },
   props: {
     result: {
       type: Object,
@@ -40,6 +63,9 @@ export default {
   methods: {
     deleteResult() {
       this.$emit('delete', this.result)
+    },
+    toggleFavourite() {
+      this.favourite = !this.favourite
     }
   }
 }
@@ -50,7 +76,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 15px;
+  border-radius: 10px;
   aspect-ratio: 1 /1;
   width: 300px;
 }
@@ -63,8 +89,11 @@ export default {
   aspect-ratio: 1 /1;
   width: 300px;
   height: 300px;
-  background: linear-gradient(90deg, rgba(228, 120, 255, 1) 0%, rgba(255, 7, 37, 1) 100%);
+  background: transparent;
   font-weight: bold;
+}
+
+.favourite-icon {
 }
 
 .spinner {
@@ -81,10 +110,18 @@ export default {
   display: inline-block;
 }
 
-.download-button {
+.button-container {
+  width: 100%;
+  padding: 10px;
   position: absolute;
   bottom: 10px;
-  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  flex-direction: row;
+}
+.download-button {
   background-color: #282828;
   color: white;
   padding: 5px 10px;
@@ -93,12 +130,24 @@ export default {
   font-weight: bold;
   display: none;
   transition: ease all 0.2s;
+  width: 60px;
+  height: 35px;
+  border-radius: 20px;
+
+  justify-content: center;
+  align-items: center;
 }
 
+.favourite-button {
+  display: none;
+  width: 60px;
+  height: 35px;
+  border-radius: 20px;
+
+  justify-content: center;
+  align-items: center;
+}
 .delete-button {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
   background-color: #282828;
   color: white;
   padding: 5px 10px;
@@ -110,6 +159,11 @@ export default {
   border: none;
   cursor: pointer;
   transition: ease all 0.2s;
+  width: 60px;
+  height: 35px;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 .delete-button:hover,
@@ -117,10 +171,14 @@ export default {
   background-color: #313131;
 }
 .result-container:hover .download-button {
-  display: block;
+  display: flex;
 }
 .result-container:hover .delete-button {
-  display: block;
+  display: flex;
+}
+
+.result-container:hover .favourite-button {
+  display: flex;
 }
 
 @keyframes spin {

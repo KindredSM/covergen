@@ -21,6 +21,20 @@ button {
   outline: none;
   border: none;
 }
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #282828;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: ease all 0.2s;
+  cursor: pointer;
+}
 a,
 .green,
 li {
