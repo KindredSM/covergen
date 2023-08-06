@@ -107,6 +107,7 @@ export default {
       this.generatedResults.push(newJob)
 
       try {
+        const randomSeed = Math.floor(Math.random() * 1000000)
         const response = await createJob({
           model: this.selectedModel,
           prompt: this.prompt,
@@ -119,7 +120,7 @@ export default {
           model: this.selectedModel,
           prompt: this.prompt,
           negative_prompt: this.negativePrompt,
-          seed: 100,
+          seed: randomSeed,
           steps: this.steps,
           cfg_scale: this.cfg_scale
         })

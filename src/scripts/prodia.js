@@ -1,33 +1,26 @@
-const base = 'https://api.prodia.com/v1'
-
-const headers = {
-  'X-Prodia-Key': import.meta.env.VITE_PRODIA_API_KEY
-}
+const base = 'http://localhost:3000'
 
 const createJob = async (params) => {
   const response = await fetch(`${base}/job`, {
     method: 'POST',
     headers: {
-      ...headers,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(params)
   })
 
   if (response.status !== 200) {
-    throw new Error(`Bad Prodia Response: ${response.status}`)
+    throw new Error(`Bad Response from Server: ${response.status}`)
   }
 
   return response.json()
 }
 
 const getJob = async (jobId) => {
-  const response = await fetch(`${base}/job/${jobId}`, {
-    headers
-  })
+  const response = await fetch(`${base}/job/${jobId}`)
 
   if (response.status !== 200) {
-    throw new Error(`Bad Prodia Response: ${response.status}`)
+    throw new Error(`Bad Response from Server: ${response.status}`)
   }
 
   return response.json()
