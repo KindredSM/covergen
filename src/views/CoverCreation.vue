@@ -14,8 +14,13 @@
           <settings-icon />
         </button>
       </div>
-      <input type="range" id="steps" v-model="steps" min="1" max="30" v-if="showSettings" />
-      <input type="range" id="cfg" v-model="cfg_scale" min="1" max="9" v-if="showSettings" />
+      <transition name="slide-fade"
+        ><div v-if="showSettings" class="settings-container">
+          <p>steps: {{ steps }}</p>
+          <input type="range" id="steps" v-model="steps" min="1" max="30" class="slider" />
+          <p>cfg: {{ cfg_scale }}</p>
+          <input type="range" id="cfg" v-model="cfg_scale" min="1" max="9" class="slider" /></div
+      ></transition>
 
       <div class="select-container">
         <down-arrow class="down-arrow" />
@@ -175,6 +180,31 @@ export default {
 </script>
 
 <style>
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+/* Start state for the component with v-show="true" */
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+}
+
+/* End state for the component with v-show="false" */
+.slide-fade-enter-to,
+.slide-fade-leave-from {
+  opacity: 1;
+}
+
 * {
   font-size: 18px;
 }
@@ -239,6 +269,10 @@ h1 {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+.slider {
+  margin: 10px;
 }
 
 .create-button {
