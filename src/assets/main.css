@@ -87,9 +87,15 @@ li {
   border-bottom: 2px solid transparent;
 }
 
+li p {
+  transition: ease 0.2s;
+}
+
 @media (hover: hover) {
   li:hover {
     color: rgb(222, 222, 222);
-    border-bottom: 2px solid white;
+  }
+  li p:hover {
+    text-shadow: 0 0 10px #fff;
   }
 }
