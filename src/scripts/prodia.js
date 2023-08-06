@@ -1,7 +1,7 @@
 const base = 'https://api.prodia.com/v1'
 
 const headers = {
-  'X-Prodia-Key': '433f6624-ec6c-41a8-841d-805381a319b7'
+  'X-Prodia-Key': import.meta.env.VITE_PRODIA_API_KEY
 }
 
 const createJob = async (params) => {
