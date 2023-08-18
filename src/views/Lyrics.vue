@@ -40,9 +40,14 @@
       <button class="create-button" @click="generateLyrics">Generate Lyrics</button>
     </div>
   </div>
-  <div class="lyrics-container" v-for="lyric in generatedLyrics" :key="lyric">
-    <h2>Your Song</h2>
-    <p class="lyrics">{{ lyric }}</p>
+  <div class="lyrics-container" v-for="(lyric, index) in generatedLyrics" :key="lyric.id">
+    <div class="icons">
+      <copy-icon class="icon" @click="copyToClipboard(lyric.text)" />
+      <edit-icon class="icon" @click="editLyric(index)" />
+    </div>
+    <h2>song {{ lyric.id }}</h2>
+    <textarea v-if="isEditing[index]" v-model="lyric.text" type="text" class="editable-lyric" />
+    <p class="lyrics" v-else>{{ lyric.text }}</p>
     <button class="delete-button" @click="removeLyric(index)">Delete</button>
   </div>
 </template>
@@ -51,15 +56,20 @@
 import { generateLyrics } from '../scripts/openai'
 import SettingsIcon from '../components/icons/SettingsIcon.vue'
 import DownArrow from '../components/icons/DownArrow.vue'
+import CopyIcon from '../components/icons/copyIcon.vue'
+import EditIcon from '../components/icons/editIcon.vue'
 
 export default {
   components: {
     SettingsIcon,
-    DownArrow
+    DownArrow,
+    CopyIcon,
+    EditIcon
   },
   data() {
     return {
       prompt: '',
+      counter: 1,
       negativePrompt: '',
       defaultPrompt: 'A happy song about London',
       defaultNegative: 'add words to exclude',
@@ -68,7 +78,8 @@ export default {
       loading: false,
       selectedGenre: 'Rock',
       genres: ['Rock', 'Pop', 'Hip-Hop', 'Jazz', 'Classical', 'Electronic', 'Other'],
-      showSettings: false
+      showSettings: false,
+      isEditing: []
     }
   },
   methods: {
@@ -97,13 +108,29 @@ export default {
         const theme = this.prompt
         const genre = this.selectedGenre
         const newLyric = await generateLyrics(theme, genre)
-        this.generatedLyrics.push(newLyric)
+        this.generatedLyrics.push({ id: this.counter, text: newLyric })
         localStorage.setItem('generatedLyrics', JSON.stringify(this.generatedLyrics))
+        this.counter++
       } catch (error) {
         console.error('Error generating lyrics:', error)
         this.generatedLyrics.push('Error generating lyrics.')
+        this.counter++
       }
     },
+    copyToClipboard(lyricText) {
+      navigator.clipboard
+        .writeText(lyricText)
+        .then(() => {
+          console.log('Lyrics copied to clipboard!')
+        })
+        .catch((err) => {
+          console.error('Could not copy text: ', err)
+        })
+    },
+    editLyric(index) {
+      this.isEditing = Object.assign([], this.isEditing, { [index]: !this.isEditing[index] })
+    },
+
     loadFromLocalStorage() {
       const storedLyrics = localStorage.getItem('generatedLyrics')
       if (storedLyrics) {
@@ -158,22 +185,6 @@ img {
   background: white;
 }
 
-.delete-button {
-  background-color: red;
-  display: flex;
-  color: white;
-  padding: 5px 10px;
-  width: 100px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.delete-button:hover {
-  background-color: darkred;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -181,6 +192,7 @@ input::-webkit-inner-spin-button {
 }
 input[type='number'] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .seed-input {
@@ -242,14 +254,75 @@ input[type='number'] {
 }
 
 .lyrics-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 50%;
+  height: 300px;
   margin: 0 auto;
   margin-top: 50px;
+  padding: 20px;
+  border-radius: 5px;
   color: white;
+  background-color: #232323;
+}
+
+.editable-lyric {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #232323;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  width: 50%;
+  height: 100%;
+  box-sizing: border-box;
+  resize: none;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.editable-lyric:focus {
+  outline: none;
+  border: none;
+}
+
+.delete-button {
+  background-color: red;
+  display: flex;
+  color: white;
+  padding: 5px 10px;
+  width: 100px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.icons {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  cursor: pointer;
+  transition: ease all 0.2s;
+}
+
+.icon:hover {
+  opacity: 0.8;
+}
+.delete-button:hover {
+  background-color: darkred;
 }
 
 .lyrics {
