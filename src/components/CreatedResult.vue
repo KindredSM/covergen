@@ -78,7 +78,8 @@ export default {
   align-items: center;
   border-radius: 10px;
   aspect-ratio: 1 /1;
-  width: 300px;
+  max-width: 300px;
+  border: 1px solid rgb(87, 87, 87);
 }
 
 .loading-state {
@@ -87,13 +88,11 @@ export default {
   align-items: center;
   border-radius: 15px;
   aspect-ratio: 1 /1;
+
   width: 300px;
   height: 300px;
   background: transparent;
   font-weight: bold;
-}
-
-.favourite-icon {
 }
 
 .spinner {
@@ -187,6 +186,15 @@ export default {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 670px) {
+  .result {
+    width: 80vw;
+  }
+  .loading-state {
+    width: 80vw;
   }
 }
 </style>

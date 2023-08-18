@@ -8,6 +8,10 @@
   font-weight: normal;
 }
 
+input {
+  outline: none;
+}
+
 input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
@@ -78,6 +82,43 @@ button {
   transition: ease all 0.2s;
   cursor: pointer;
 }
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.slide-fade-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+/* Start state for the component with v-show="true" */
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+}
+
+/* End state for the component with v-show="false" */
+.slide-fade-enter-to,
+.slide-fade-leave-from {
+  opacity: 1;
+}
+
+* {
+  font-size: 18px;
+}
+.create-container {
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 a,
 .green,
 li {

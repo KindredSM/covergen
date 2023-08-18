@@ -16,17 +16,25 @@
       </div>
       <transition name="slide-fade"
         ><div v-if="showSettings" class="settings-container">
-          <p>steps: {{ steps }}</p>
+          <p class="settings-text">steps: {{ steps }}</p>
           <input type="range" id="steps" v-model="steps" min="1" max="30" class="slider" />
-          <p>cfg: {{ cfg_scale }}</p>
-          <input type="range" id="cfg" v-model="cfg_scale" min="1" max="9" class="slider" /></div
-      ></transition>
-
+          <p class="settings-text">cfg: {{ cfg_scale }}</p>
+          <input type="range" id="cfg" v-model="cfg_scale" min="1" max="9" class="slider" />
+          <p class="settings-text">seed:</p>
+          <input type="number" id="seed" v-model="seed" class="seed-input" />
+        </div>
+      </transition>
+      <div class="select-container">
+        <down-arrow class="down-arrow" />
+        <select name="genre" id="genre" class="model-select" v-model="selectedGenre">
+          <option v-for="genre in genres" :key="genre" :value="genre">Style: {{ genre }}</option>
+        </select>
+      </div>
       <div class="select-container">
         <down-arrow class="down-arrow" />
         <select name="model" id="model" class="model-select" v-model="selectedModel">
           <option v-for="model in models" :key="model.id" :value="`${model.name} [${model.id}]`">
-            {{ model.name }}
+            Model: {{ model.name }}
           </option>
         </select>
       </div>
@@ -68,11 +76,14 @@ export default {
     return {
       prompt: '',
       negativePrompt: '',
-      defaultPrompt: 'Man walking on water',
+      defaultPrompt: 'Man walking on water, 4k',
       defaultNegative: 'add words to exclude',
+      seed: '',
       generatedResult: {},
       generatedResults: [],
       loading: false,
+      selectedGenre: 'Rock',
+      genres: ['Rock', 'Pop', 'Hip-Hop', 'Jazz', 'Classical', 'Electronic', 'Other'],
       showSettings: false,
       steps: 30,
       cfg_scale: 7,
@@ -98,7 +109,30 @@ export default {
     }
   },
   methods: {
+    getGenrePrompt(genre) {
+      switch (genre) {
+        case 'Rock':
+          return 'Guitarist rocking on stage, 4k, high resolution'
+        case 'Pop':
+          return 'Pop singer with colorful background, 4k, high resolution'
+        case 'Hip-Hop':
+          return 'Rapper performing in a club, 4k, high resolution'
+        case 'Jazz':
+          return 'Saxophonist in a jazz bar, 4k, high resolution'
+        case 'Classical':
+          return 'Orchestra performing a symphony, 4k, high resolution'
+        case 'Electronic':
+          return 'DJ mixing at a rave party, 4k, high resolution'
+        case 'Other':
+          return ''
+        default:
+          return ''
+      }
+    },
     async generateCover() {
+      const genrePrompt = this.getGenrePrompt(this.selectedGenre)
+      const fullPrompt = `${genrePrompt} ${this.prompt}`
+
       const newJob = {
         loading: true,
         status: 'pending'
@@ -106,13 +140,14 @@ export default {
 
       this.generatedResults.push(newJob)
 
+      const seedValue = this.seed ? this.seed : Math.floor(Math.random() * 1000000)
+
       try {
-        const randomSeed = Math.floor(Math.random() * 1000000)
         const response = await createJob({
           model: this.selectedModel,
-          prompt: this.prompt,
+          prompt: fullPrompt,
           negative_prompt: this.negativePrompt,
-          seed: 100,
+          seed: seedValue,
           steps: Number(this.steps),
           cfg_scale: Number(this.cfg_scale)
         })
@@ -120,7 +155,7 @@ export default {
           model: this.selectedModel,
           prompt: this.prompt,
           negative_prompt: this.negativePrompt,
-          seed: randomSeed,
+          seed: seedValue,
           steps: this.steps,
           cfg_scale: this.cfg_scale
         })
@@ -173,50 +208,20 @@ export default {
       this.updateLocalStorage()
     }
   },
+
   created() {
     this.loadFromLocalStorage()
-    console.log(this.steps)
   }
 }
 </script>
 
 <style>
-.settings-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+h1 {
+  color: white;
+  font-size: 24px;
   margin-bottom: 10px;
+  text-align: center;
 }
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.3s ease;
-}
-
-/* Start state for the component with v-show="true" */
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  opacity: 0;
-}
-
-/* End state for the component with v-show="false" */
-.slide-fade-enter-to,
-.slide-fade-leave-from {
-  opacity: 1;
-}
-
-* {
-  font-size: 18px;
-}
-.create-container {
-  margin-top: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
 h2 {
   color: white;
 }
@@ -225,18 +230,16 @@ img {
   border-radius: 20px;
 }
 
+.settings-text {
+  margin: 0px 10px;
+}
 .create {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 300px;
+  max-width: 300px;
 }
 
-h1 {
-  color: white;
-  font-size: 24px;
-  margin-bottom: 10px;
-}
 .input {
   border-radius: 30px;
   padding: 10px;
@@ -246,6 +249,22 @@ h1 {
   width: 100%;
   height: 50px;
   background: white;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.seed-input {
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 30px;
+  border: none;
 }
 
 .negative {
@@ -346,5 +365,12 @@ h1 {
 }
 .created-item:hover {
   cursor: pointer;
+}
+
+@media screen and (max-width: 670px) {
+  .created {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>
