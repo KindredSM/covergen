@@ -10,8 +10,8 @@
     />
     <div class="button-container">
       <button class="btn delete-button" @click="deleteResult"><delete-icon /></button>
-      <button class="btn favourite-button" @click="toggleFavourite">
-        <favourite-icon class="favourite-icon" v-if="!favourite" /><favouriteSelectedIcon v-else />
+      <button class="btn favorite-button" @click="$emit('toggleFavorite')">
+        <favorite-icon class="favorite-icon" v-if="!isfavorite" /><favoriteSelectedIcon v-else />
       </button>
       <a
         v-if="parsedResult.imageUrl"
@@ -29,23 +29,24 @@
 <script>
 import DownloadIcon from './icons/DownloadIcon.vue'
 import DeleteIcon from './icons/DeleteIcon.vue'
-import FavouriteIcon from './icons/FavouriteIcon.vue'
-import favouriteSelectedIcon from './icons/FavouriteSelectedIcon.vue'
+import favoriteIcon from './icons/favoriteIcon.vue'
+import favoriteSelectedIcon from './icons/favoriteSelectedIcon.vue'
 
 export default {
   data() {
     return {
-      favourite: false
+      favorite: false
     }
   },
 
   components: {
     DownloadIcon,
     DeleteIcon,
-    FavouriteIcon,
-    favouriteSelectedIcon
+    favoriteIcon,
+    favoriteSelectedIcon
   },
   props: {
+    isfavorite: Boolean,
     result: {
       type: Object,
       default: () => ({})
@@ -64,8 +65,8 @@ export default {
     deleteResult() {
       this.$emit('delete', this.result)
     },
-    toggleFavourite() {
-      this.favourite = !this.favourite
+    togglefavorite() {
+      this.favorite = !this.favorite
     }
   }
 }
@@ -137,7 +138,7 @@ export default {
   align-items: center;
 }
 
-.favourite-button {
+.favorite-button {
   display: none;
   width: 60px;
   height: 35px;
@@ -176,7 +177,7 @@ export default {
   display: flex;
 }
 
-.result-container:hover .favourite-button {
+.result-container:hover .favorite-button {
   display: flex;
 }
 

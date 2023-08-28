@@ -55,18 +55,27 @@
       class="created-item"
       :result="result"
       :loading="result.loading"
+      :isfavorite="artStore.isfavorite(result.id)"
       @delete="removeResult"
     />
   </div>
 </template>
 
 <script>
+import { useArtStore } from '../stores/artStore'
+
 import CreatedResult from '../components/CreatedResult.vue'
 import { createJob, getJob } from '../scripts/prodia'
 import SettingsIcon from '../components/icons/SettingsIcon.vue'
 import DownArrow from '../components/icons/DownArrow.vue'
 
 export default {
+  setup() {
+    const artStore = useArtStore()
+    return {
+      artStore
+    }
+  },
   components: {
     CreatedResult,
     SettingsIcon,
@@ -127,6 +136,13 @@ export default {
           return ''
         default:
           return ''
+      }
+    },
+    togglefavorite(artId) {
+      if (this.artStore.isfavorite(artId)) {
+        this.artStore.removefavorite(artId)
+      } else {
+        this.artStore.addfavorite(artId)
       }
     },
     async generateCover() {

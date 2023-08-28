@@ -15,14 +15,7 @@
         </button>
       </div>
       <transition name="slide-fade"
-        ><div v-if="showSettings" class="settings-container">
-          <p class="settings-text">steps: {{ steps }}</p>
-          <input type="range" id="steps" v-model="steps" min="1" max="30" class="slider" />
-          <p class="settings-text">cfg: {{ cfg_scale }}</p>
-          <input type="range" id="cfg" v-model="cfg_scale" min="1" max="9" class="slider" />
-          <p class="settings-text">seed:</p>
-          <input type="number" id="seed" v-model="seed" class="seed-input" />
-        </div>
+        ><div v-if="showSettings" class="settings-container"></div>
       </transition>
       <div class="select-container">
         <down-arrow class="down-arrow" />
@@ -30,25 +23,21 @@
           <option v-for="genre in genres" :key="genre" :value="genre">Genre: {{ genre }}</option>
         </select>
       </div>
-      <input
-        type="text"
-        id="negative-prompt"
-        class="input negative"
-        v-model="negativePrompt"
-        v-bind:placeholder="defaultNegative"
-      />
       <button class="create-button" @click="generateLyrics">Generate Lyrics</button>
     </div>
   </div>
   <div class="lyrics-container" v-for="(lyric, index) in generatedLyrics" :key="lyric.id">
     <div class="icons">
       <copy-icon class="icon" @click="copyToClipboard(lyric.text)" />
+      <transition name="slide-fade">
+        <div v-if="copied" class="tooltip">Copied</div>
+      </transition>
       <edit-icon class="icon" @click="editLyric(index)" />
+      <delete-icon class="icon" @click="removeLyric(index)" />
     </div>
     <h2>song {{ lyric.id }}</h2>
     <textarea v-if="isEditing[index]" v-model="lyric.text" type="text" class="editable-lyric" />
     <p class="lyrics" v-else>{{ lyric.text }}</p>
-    <button class="delete-button" @click="removeLyric(index)">Delete</button>
   </div>
 </template>
 
@@ -59,12 +48,15 @@ import DownArrow from '../components/icons/DownArrow.vue'
 import CopyIcon from '../components/icons/copyIcon.vue'
 import EditIcon from '../components/icons/editIcon.vue'
 
+import DeleteIcon from '../components/icons/DeleteIcon.vue'
+
 export default {
   components: {
     SettingsIcon,
     DownArrow,
     CopyIcon,
-    EditIcon
+    EditIcon,
+    DeleteIcon
   },
   data() {
     return {
@@ -79,7 +71,8 @@ export default {
       selectedGenre: 'Rock',
       genres: ['Rock', 'Pop', 'Hip-Hop', 'Jazz', 'Classical', 'Electronic', 'Other'],
       showSettings: false,
-      isEditing: []
+      isEditing: [],
+      copied: false
     }
   },
   methods: {
@@ -117,11 +110,17 @@ export default {
         this.counter++
       }
     },
+    showCopiedTooltip() {
+      this.copied = true
+      setTimeout(() => {
+        this.copied = false
+      }, 2000)
+    },
     copyToClipboard(lyricText) {
       navigator.clipboard
         .writeText(lyricText)
         .then(() => {
-          console.log('Lyrics copied to clipboard!')
+          this.showCopiedTooltip()
         })
         .catch((err) => {
           console.error('Could not copy text: ', err)
@@ -129,6 +128,7 @@ export default {
     },
     editLyric(index) {
       this.isEditing = Object.assign([], this.isEditing, { [index]: !this.isEditing[index] })
+      localStorage.setItem('generatedLyrics', JSON.stringify(this.generatedLyrics))
     },
 
     loadFromLocalStorage() {
@@ -149,7 +149,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 h1 {
   color: white;
   font-size: 24px;
@@ -193,6 +193,16 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: #333;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  bottom: 30px;
 }
 
 .seed-input {
