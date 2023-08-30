@@ -26,18 +26,20 @@
       <button class="create-button" @click="generateLyrics">Generate Lyrics</button>
     </div>
   </div>
-  <div class="lyrics-container" v-for="(lyric, index) in generatedLyrics" :key="lyric.id">
-    <div class="icons">
-      <copy-icon class="icon" @click="copyToClipboard(lyric.text)" />
-      <transition name="slide-fade">
-        <div v-if="copied" class="tooltip">Copied</div>
-      </transition>
-      <edit-icon class="icon" @click="editLyric(index)" />
-      <delete-icon class="icon" @click="removeLyric(index)" />
+  <div class="lyrics-container-container">
+    <div class="lyrics-container" v-for="(lyric, index) in generatedLyrics" :key="lyric.id">
+      <div class="icons">
+        <copy-icon class="icon" @click="copyToClipboard(lyric.text)" />
+        <transition name="slide-fade">
+          <div v-if="copied" class="tooltip">Copied</div>
+        </transition>
+        <edit-icon class="icon" @click="editLyric(index)" />
+        <delete-icon class="icon" @click="removeLyric(index)" />
+      </div>
+      <h2>song {{ lyric.id }}</h2>
+      <textarea v-if="isEditing[index]" v-model="lyric.text" type="text" class="editable-lyric" />
+      <p class="lyrics" v-else v-html="formatLyrics(lyric.text)"></p>
     </div>
-    <h2>song {{ lyric.id }}</h2>
-    <textarea v-if="isEditing[index]" v-model="lyric.text" type="text" class="editable-lyric" />
-    <p class="lyrics" v-else>{{ lyric.text }}</p>
   </div>
 </template>
 
@@ -115,6 +117,9 @@ export default {
       setTimeout(() => {
         this.copied = false
       }, 2000)
+    },
+    formatLyrics(text) {
+      return text.replace(/(Verse \d+:)/g, '<b>$1</b><br>').replace(/\n/g, '<br>')
     },
     copyToClipboard(lyricText) {
       navigator.clipboard
@@ -269,11 +274,12 @@ input[type='number'] {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 50%;
-  height: 300px;
+  width: 30%;
+  min-height: 200px;
   margin: 0 auto;
-  margin-top: 50px;
-  padding: 20px;
+  margin-top: 25px;
+  padding-top: 20px;
+
   border-radius: 5px;
   color: white;
   background-color: #232323;
