@@ -10,7 +10,7 @@
     />
     <div class="button-container">
       <button class="btn delete-button" @click="deleteResult"><delete-icon /></button>
-      <button class="btn favorite-button" @click="$emit('toggleFavorite')">
+      <button class="btn favorite-button" @click="toggleFavorite">
         <favorite-icon class="favorite-icon" v-if="!isfavorite" /><favoriteSelectedIcon v-else />
       </button>
       <a
@@ -29,8 +29,8 @@
 <script>
 import DownloadIcon from './icons/DownloadIcon.vue'
 import DeleteIcon from './icons/DeleteIcon.vue'
-import favoriteIcon from './icons/favoriteIcon.vue'
-import favoriteSelectedIcon from './icons/favoriteSelectedIcon.vue'
+import FavoriteIcon from '../components/icons/FavoriteIcon.vue'
+import FavoriteSelectedIcon from '../components/icons/FavoriteSelectedIcon.vue'
 
 export default {
   data() {
@@ -42,8 +42,8 @@ export default {
   components: {
     DownloadIcon,
     DeleteIcon,
-    favoriteIcon,
-    favoriteSelectedIcon
+    FavoriteIcon,
+    FavoriteSelectedIcon
   },
   props: {
     isfavorite: Boolean,
@@ -66,7 +66,7 @@ export default {
       this.$emit('delete', this.result)
     },
     togglefavorite() {
-      this.favorite = !this.favorite
+      this.$emit('toggleFavorite', this.result.id)
     }
   }
 }

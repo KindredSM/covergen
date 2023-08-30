@@ -10,12 +10,12 @@ export const useArtStore = defineStore({
       if (!this.favorites.includes(artId)) {
         this.favorites.push(artId)
       }
+    },
+    removefavorite(artId) {
+      this.favorites = this.favorites.filter((id) => id !== artId)
+    },
+    isfavorite(artId) {
+      return this.favorites.includes(artId)
     }
-  },
-  removefavorite(artId) {
-    this.favorites = this.favorites.filter((id) => id !== artId)
-  },
-  isfavorite(artId) {
-    return this.favorites.includes(artId)
   }
 })

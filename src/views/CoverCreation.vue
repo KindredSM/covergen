@@ -57,6 +57,7 @@
       :loading="result.loading"
       :isfavorite="artStore.isfavorite(result.id)"
       @delete="removeResult"
+      @toggleFavorite="togglefavorite"
     />
   </div>
 </template>
