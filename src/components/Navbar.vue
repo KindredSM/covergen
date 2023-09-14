@@ -42,9 +42,13 @@
         </router-link>
       </li>
       <li>
-        <a href="https://github.com/KindredSM/covergen" target="_blank"> <p>GitHub</p></a>
+        <div class="auth">
+          <a v-if="!loggedIn" v-on:click="openModal"> <p>Login</p></a>
+          <a v-else> <p>Log out</p></a>
+        </div>
       </li>
     </ul>
+    <signup-modal />
   </nav>
 </template>
 
@@ -53,23 +57,27 @@ import LoginIcon from './icons/LoginIcon.vue'
 import LyricsIcon from './icons/LyricsIcon.vue'
 import ArtIcon from './icons/ArtIcon.vue'
 import MobileNavVue from './icons/MobileNav.vue'
+import SignupModal from './modals/SignupModal.vue'
+import { ref } from 'vue'
+import { showSignupModal } from '../lib/refs/modals'
 
 export default {
   components: {
     LoginIcon,
     LyricsIcon,
     ArtIcon,
-    MobileNavVue
+    MobileNavVue,
+    SignupModal
   },
-  data() {
-    return {
-      navOpen: false
+  setup() {
+    const navOpen = ref(false)
+    const loggedIn = ref(false)
+
+    const openModal = () => {
+      showSignupModal.value = true
     }
-  },
-  methods: {
-    toggleMobileNav() {
-      this.navOpen = !this.navOpen
-    }
+
+    return { navOpen, loggedIn, showSignupModal, openModal }
   }
 }
 </script>

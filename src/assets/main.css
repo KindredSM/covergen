@@ -119,6 +119,11 @@ button {
   flex-direction: column;
 }
 
+a {
+  cursor: pointer;
+  color: white;
+}
+
 a,
 .green,
 li {
